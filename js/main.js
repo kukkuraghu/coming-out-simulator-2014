@@ -1,3 +1,5 @@
+var replayCount = 0;
+var choicesSaved = [];
 window.onload = function(){
 	
 	var loading_bar = document.getElementById("loading_bar");
@@ -11,7 +13,22 @@ window.onload = function(){
 		},1000);
 		setTimeout(function(){
 			document.getElementById("game").setAttribute("screen","game");
-			Start();
+			var lastScene = localStorage.getItem("currentScene");
+			replayCount = localStorage.getItem("dialogueCount");
+			replayCount = parseInt(replayCount, 10);
+			var choicesSavedString = localStorage.getItem("choices");
+			if (choicesSavedString) {
+				choicesSaved = JSON.parse(choicesSavedString);
+				console.log(choicesSaved);
+			}
+			
+			console.log("Last Scene : ", lastScene);
+			console.log("replayCount : ", replayCount);
+			if (replayCount) {
+				replay = true;
+				//window[lastScene]();
+			}
+			Start();	
 		},1500);
 	});
 

@@ -47,6 +47,11 @@ function resetTimer(){
 
 var TIMER_GAP = 100;
 function getDuration(message){
+	//dialoguePublishCount++;
+	//return 0;//to be deleted
+	//if (replay && dialoguePublishCount <= replayCount) {
+		//return 0;
+	//}
 	// Approx 6 words per second, or 160ms per word. Plus 800ms just in case.
 	return 800 + message.split(" ").length*160;
 }
@@ -66,10 +71,18 @@ function queue(callback, duration, instantaneous){
 
 function Character(character){
 	return function(message){
+		var messageDuration = 0;
 		if(!message) return;
+		dialoguePublishCount++;
+		if (replay && dialoguePublishCount <= replayCount) {
+			messageDuration = 0;
+		}
+		else {
+			messageDuration = getDuration(message);
+		}
 		queue(function(){
 			publish("say", [character, message]);
-		},getDuration(message));
+		},messageDuration);
 	};
 }
 
@@ -100,7 +113,9 @@ function StopSound(){
 }
 
 function Wait(duration){
-	queue(function(){},duration);
+	if (!replay) {
+		queue(function(){},duration);
+	}
 }
 function Clear(duration){
 	Wait(1000);

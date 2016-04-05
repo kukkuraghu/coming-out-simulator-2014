@@ -11,6 +11,11 @@ var choicesDOM = document.getElementById("choices");
 var backgroundDOM = document.getElementById("background");
 
 subscribe("say", function(character, message){
+	//Keeps a count on the number of dialogues
+	//Used i replay
+	dialogueCount++;
+
+
 
 	// Add dialogue bubble
 	var dom = document.createElement("div");
@@ -21,13 +26,22 @@ subscribe("say", function(character, message){
 	dom.innerHTML = message;
 	dialogueDOM.appendChild(dom);
 
-	// Play sounds
-	createjs.Sound.play(character.sound);
+	if (!replay) {
+		// Play sounds
+		createjs.Sound.play(character.sound);
 
-	// Fade in
-	setTimeout(function(){
+		// Fade in
+		setTimeout(function(){
+			dom.style.opacity = 1;
+		},1);	
+	}
+	else {
 		dom.style.opacity = 1;
-	},1);
+	}
+	if (replay && dialogueCount >= replayCount) {
+		replay = false;
+	}
+	
 
 	// If dialogue bubbles are too big, scroll it.
 	var maxDialogueSpace = game.clientHeight-(260+120); // Game height - (image height + choice height)
@@ -42,36 +56,49 @@ subscribe("choose", function(choices){
 
 	// Choice labels
 	var labels = Object.keys(choices);
+	var currentChoice = choicesSaved[choiceCounter];
+	choiceCounter++;
 
-	// Create choices
-	for(var i=0;i<labels.length;i++){
+	if (replay) {
+		console.log("current choice : ", currentChoice);
+		choicesMade.push(currentChoice);
+		choices[labels[labels.indexOf(currentChoice)]](currentChoice);
+	}
+	else {
+		// Create choices
+		for(var i=0;i<labels.length;i++){
 
-		var label = labels[i];
-		var button = document.createElement("div");
-		button.innerHTML = label;
-		button.onclick = (function(callback,message){
-			return function(){
-				choicesDOM.innerHTML = "";
-				callback(message);
-			};
-		})(choices[label], label);
+			var label = labels[i];
+			var button = document.createElement("div");
+			button.innerHTML = label;
+			button.onclick = (function(callback,message){
+				return function(){
+					console.log(message);
+					choicesMade.push(message);
+					choicesDOM.innerHTML = "";
+					callback(message);
+				};
+			})(choices[label], label);
 
-		choicesDOM.appendChild(button);
+			choicesDOM.appendChild(button);
 
-		(function(button){
-			setTimeout(function(){
-				button.setAttribute("shown","true");
-			},100*i);
-		})(button);
+			(function(button){
+				setTimeout(function(){
+					button.setAttribute("shown","true");
+				},100*i);
+			})(button);
 
+		}
+
+		// Choice padding, for 1-3 choices
+		var height = (labels.length*30);
+		var padding = (120-height)/2;
+		choicesDOM.style.height = height+"px";
+		choicesDOM.style.padding = padding+"px 0";
+		
 	}
 
-	// Choice padding, for 1-3 choices
-	var height = (labels.length*30);
-	var padding = (120-height)/2;
-	choicesDOM.style.height = height+"px";
-	choicesDOM.style.padding = padding+"px 0";
-
+	
 });
 
 function ClearDialogue(){
