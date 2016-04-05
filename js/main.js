@@ -25,10 +25,17 @@ window.onload = function(){
 			console.log("Last Scene : ", lastScene);
 			console.log("replayCount : ", replayCount);
 			if (replayCount) {
-				replay = true;
-				//window[lastScene]();
+				Choose({
+					"[start from last position]": function(message){
+						replay = true;
+						Start();
+					},
+					"[All new session]": function(message){
+						replay = false;
+						Start();
+					},
+				});
 			}
-			Start();	
 		},1500);
 	});
 
