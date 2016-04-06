@@ -7,7 +7,8 @@ window.onclick = function(){
 var gameDOM = document.getElementById("game");
 var dialogueDOM = document.getElementById("dialogue");
 var dialogueDOMOffset = 20;
-var choicesDOM = document.getElementById("choices");
+var choicesDOM = document.getElementById("choices1");
+var choiceInputDOM = document.getElementById("choice_input");
 var backgroundDOM = document.getElementById("background");
 
 subscribe("say", function(character, message){
@@ -56,6 +57,11 @@ subscribe("choose", function(choices){
 
 	// Choice labels
 	var labels = Object.keys(choices);
+	var actionChoice = false;
+	console.log(labels[0][0]);
+	if (labels[0][0] === "[") {
+		actionChoice = true;
+	}
 	var currentChoice = choicesSaved[choiceCounter];
 	choiceCounter++;
 
@@ -65,18 +71,38 @@ subscribe("choose", function(choices){
 		choices[labels[labels.indexOf(currentChoice)]](currentChoice);
 	}
 	else {
+		if (!actionChoice) {
+			choiceInputDOM.style.display = "inline-block";	
+		}
+		
 		// Create choices
 		for(var i=0;i<labels.length;i++){
 
 			var label = labels[i];
 			var button = document.createElement("div");
 			button.innerHTML = label;
-			button.onclick = (function(callback,message){
+			button.onclick = (function(cb,message){
 				return function(){
 					console.log(message);
 					choicesMade.push(message);
-					choicesDOM.innerHTML = "";
-					callback(message);
+					if (!actionChoice) {
+						jQuery("#choice_input").removeData("typed");
+						jQuery("#choice_input").typed({
+	        				strings: [message],
+	        				typeSpeed: 0,
+	        				callback: function() {
+	        					choiceInputDOM.value = "";
+								choiceInputDOM.style.display = "none";
+								choicesDOM.innerHTML = "";
+								cb(message);
+	        				}
+	      				});
+	      			}
+	      			else {
+						choicesDOM.innerHTML = "";
+						cb(message);
+	      			}
+					
 				};
 			})(choices[label], label);
 

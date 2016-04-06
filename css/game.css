@@ -145,13 +145,13 @@ body{
 
 
 /** Choices **/
-#game #choices{
+#game #choices1{
 	background:#222;
 	position:absolute; bottom:0;
 	width:100%; height:90px;
 	padding: 15px 0;
 }
-#game #choices > div{
+#game #choices1 > div{
 
 	background:#222;
 	width:350px; height:18px;
@@ -183,11 +183,11 @@ body{
 	user-select: none;   
 
 }
-#game #choices > div[shown=true]{
+#game #choices1 > div[shown=true]{
 	top:0px;
 	opacity: 1;
 }
-#game #choices > div:hover{
+#game #choices1 > div:hover{
 	background: #444;
 	color:#fff;
 }
@@ -263,3 +263,31 @@ body{
     left: 100%;
     border-left-color: inherit;
 }
+
+#game #choice_input_div{
+	background:#222;
+	position:absolute; bottom:120px;
+	width:100%; height:15px;
+	padding: 5px 0;
+}
+
+#game #choices #choice_input{
+	position:absolute; bottom:120px;
+	/* width:100%; height:25px;
+	padding:0;
+	border:0;*/
+	display:none;
+}
+
+.textbox { 
+     background: #1A1A1A; 
+    height:25px; 
+    width: 95%; 
+    border-radius: 2em; 
+    border: none; 
+    color: #A2A2A2; 
+    padding-left: 1.5em; 
+    outline: none; 
+    box-shadow: 0 4px 6px -5px hsl(0, 0%, 40%), inset 0px 4px 6px -5px hsl(0, 0%, 2%) 
+} 
+ 

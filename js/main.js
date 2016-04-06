@@ -36,6 +36,9 @@ window.onload = function(){
 					},
 				});
 			}
+			else {
+				Start();
+			}
 		},1500);
 	});
 

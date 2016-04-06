@@ -4,6 +4,8 @@
 	<title>Coming Out Simulator 2014</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/game.css" type="text/css"/>
+	<script src="js/lib/jquery.js"></script>
+	<script src="js/lib/typed.js"></script>
 </head>
 
 <body>
@@ -12,7 +14,16 @@
 			
 			<div id="background"></div>
 			<div id="dialogue"></div>
-			<div id="choices"></div>
+			<!--
+			<div id="choice_input_div">
+				<input type='text' id="choice_input_div" class='required' name=''>
+			</div>
+			-->
+			<div id="choices">
+				<!-- <span id="choice_input"  class="textbox" name=''></span> -->
+				<input type="text" id="choice_input" class="textbox" name="">
+				<div id="choices1"></div>
+			</div>
 
 			<div id="blank"></div>
 			<div id="loading">
@@ -103,7 +114,9 @@
 		</div>
 	</div>
 </body>
-
+<script>
+	jQuery.noConflict();
+</script>
 <script src="js/core/q.js"></script>
 <script src="js/core/minsubpub.js"></script>
 <script src="js/core/soundjs-0.5.2.min.js"></script>
@@ -129,5 +142,6 @@
 <script src="js/game/outro.js"></script>
 
 <script src="js/main.js"></script>
+
 
 </html>
