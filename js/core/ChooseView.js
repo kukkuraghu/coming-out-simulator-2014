@@ -59,18 +59,19 @@ subscribe("choose", function(choices){
 	var labels = Object.keys(choices);
 	var actionChoice = false;
 	console.log(labels[0][0]);
-	if (labels[0][0] === "[") {
-		actionChoice = true;
-	}
-	var currentChoice = choicesSaved[choiceCounter];
-	choiceCounter++;
+	
 
 	if (replay) {
+		var currentChoice = choicesSaved[choiceCounter];
+		choiceCounter++;
 		console.log("current choice : ", currentChoice);
 		choicesMade.push(currentChoice);
 		choices[labels[labels.indexOf(currentChoice)]](currentChoice);
 	}
 	else {
+		if (labels[0][0] === "[") {
+			actionChoice = true;
+		}
 		if (!actionChoice) {
 			choiceInputDOM.style.display = "inline-block";	
 		}
@@ -84,7 +85,12 @@ subscribe("choose", function(choices){
 			button.onclick = (function(cb,message){
 				return function(){
 					console.log(message);
-					choicesMade.push(message);
+					if(addSelection) {
+						choicesMade.push(message);
+					}
+					else {
+						addSelection = true;
+					}
 					if (!actionChoice) {
 						jQuery("#choice_input").removeData("typed");
 						jQuery("#choice_input").typed({

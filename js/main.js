@@ -1,5 +1,3 @@
-var replayCount = 0;
-var choicesSaved = [];
 window.onload = function(){
 	
 	var loading_bar = document.getElementById("loading_bar");
@@ -13,30 +11,43 @@ window.onload = function(){
 		},1000);
 		setTimeout(function(){
 			document.getElementById("game").setAttribute("screen","game");
-			var lastScene = localStorage.getItem("currentScene");
-			replayCount = localStorage.getItem("dialogueCount");
+
+			//The program keeps track of the number of dialogues displayed.
+			//When the browser is closed or relaoded, the program will write the 
+			// count to localStorage with name "dialogueCount". 
+			//If the user prefers to start from where he left,
+			//the program will write  "dialogueCount" messages to screen
+			replayCount = localStorage.getItem("dialogueCount"); //Reads the "dialogueCount" from localStorage
 			replayCount = parseInt(replayCount, 10);
-			var choicesSavedString = localStorage.getItem("choices");
-			if (choicesSavedString) {
-				choicesSaved = JSON.parse(choicesSavedString);
-				console.log(choicesSaved);
-			}
 			
-			console.log("Last Scene : ", lastScene);
-			console.log("replayCount : ", replayCount);
+			
 			if (replayCount) {
+				//There were some chats last time.
+				//Give an option to the user to start from where he left or
+				//to start from the beginning.
+				addSelection = false;//Set a flag to indicate that this choice not to be saved for future session replays.
 				Choose({
 					"[start from last position]": function(message){
-						replay = true;
+						//User opted to start from where he left
+						replay = true;//switch on the replay flag. Other functions will check this flag.
+
+						//Read the choices made in the last session.
+						//It is available in the localStorage
+						var choicesSavedString = localStorage.getItem("choices");
+						if (choicesSavedString) {
+							choicesSaved = JSON.parse(choicesSavedString);
+						}
 						Start();
 					},
 					"[All new session]": function(message){
-						replay = false;
+						//User opted to start fresh
+						replay = false;//Keep replay flag off.
 						Start();
 					},
 				});
 			}
 			else {
+				//No previous chats available. Start fresh.
 				Start();
 			}
 		},1500);

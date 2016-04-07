@@ -264,13 +264,6 @@ body{
     border-left-color: inherit;
 }
 
-#game #choice_input_div{
-	background:#222;
-	position:absolute; bottom:120px;
-	width:100%; height:15px;
-	padding: 5px 0;
-}
-
 #game #choices #choice_input{
 	position:absolute; bottom:120px;
 	/* width:100%; height:25px;
