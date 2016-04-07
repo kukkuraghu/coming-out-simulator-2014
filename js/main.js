@@ -27,7 +27,7 @@ window.onload = function(){
 				//to start from the beginning.
 				addSelection = false;//Set a flag to indicate that this choice not to be saved for future session replays.
 				Choose({
-					"[start from last position]": function(message){
+					"[Start from where I left]": function(message){
 						//User opted to start from where he left
 						replay = true;//switch on the replay flag. Other functions will check this flag.
 
@@ -39,7 +39,7 @@ window.onload = function(){
 						}
 						Start();
 					},
-					"[All new session]": function(message){
+					"[Start new]": function(message){
 						//User opted to start fresh
 						replay = false;//Keep replay flag off.
 						Start();

@@ -47,11 +47,6 @@ function resetTimer(){
 
 var TIMER_GAP = 100;
 function getDuration(message){
-	//dialoguePublishCount++;
-	//return 0;//to be deleted
-	//if (replay && dialoguePublishCount <= replayCount) {
-		//return 0;
-	//}
 	// Approx 6 words per second, or 160ms per word. Plus 800ms just in case.
 	return 800 + message.split(" ").length*160;
 }
@@ -73,11 +68,15 @@ function Character(character){
 	return function(message){
 		var messageDuration = 0;
 		if(!message) return;
-		dialoguePublishCount++;
+		dialoguePublishCount++; //Counter used to track the dialogues published. Globale variable declared in saveScene.js
+
+
 		if (replay && dialoguePublishCount <= replayCount) {
+			//The dialogue is published in replay mode. Keep the messageDuration as 0.
 			messageDuration = 0;
 		}
 		else {
+			//The dialogue is not in replay mode. Calculate the messageDuration.
 			messageDuration = getDuration(message);
 		}
 		queue(function(){
@@ -113,7 +112,9 @@ function StopSound(){
 }
 
 function Wait(duration){
+	//Check if the wait is called in replay mode. If it is in relay mode, don't queue it.
 	if (!replay) {
+		//In replay mode, don't queue it.
 		queue(function(){},duration);
 	}
 }

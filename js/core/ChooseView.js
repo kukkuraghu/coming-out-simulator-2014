@@ -7,16 +7,15 @@ window.onclick = function(){
 var gameDOM = document.getElementById("game");
 var dialogueDOM = document.getElementById("dialogue");
 var dialogueDOMOffset = 20;
-var choicesDOM = document.getElementById("choices1");
+var choicesDOM = document.getElementById("choices");
 var choiceInputDOM = document.getElementById("choice_input");
 var backgroundDOM = document.getElementById("background");
 
 subscribe("say", function(character, message){
-	//Keeps a count on the number of dialogues
-	//Used i replay
+	//Keeps a count on the number of dialogues.
+	//Saves this count to localStorage when the browser is cloed or reloaded.
+	//It is a global variable decalred and initialized in saveScene.js
 	dialogueCount++;
-
-
 
 	// Add dialogue bubble
 	var dom = document.createElement("div");
@@ -27,6 +26,8 @@ subscribe("say", function(character, message){
 	dom.innerHTML = message;
 	dialogueDOM.appendChild(dom);
 
+	
+	//In replay mode, sound effect is removed. Fade in simulation also removed.
 	if (!replay) {
 		// Play sounds
 		createjs.Sound.play(character.sound);
@@ -39,6 +40,8 @@ subscribe("say", function(character, message){
 	else {
 		dom.style.opacity = 1;
 	}
+
+	//If in replay mode, check is it required to switch off the replay mode
 	if (replay && dialogueCount >= replayCount) {
 		replay = false;
 	}
@@ -57,22 +60,30 @@ subscribe("choose", function(choices){
 
 	// Choice labels
 	var labels = Object.keys(choices);
-	var actionChoice = false;
-	console.log(labels[0][0]);
-	
+	var actionChoice = false; //Flag used to indicate the action choices - choices elclosd in [].
 
 	if (replay) {
+		//In replay mode, get the choice made from the saved choices.
 		var currentChoice = choicesSaved[choiceCounter];
 		choiceCounter++;
-		console.log("current choice : ", currentChoice);
+
+		//Save the choice made.
 		choicesMade.push(currentChoice);
+
+		//Call the action associated with the choice made.
 		choices[labels[labels.indexOf(currentChoice)]](currentChoice);
 	}
 	else {
+		//Not in replay mode
+
+		//Check if the choices are  action choices - choices elclosd in [].
+		//If action choice, set the actionChoice flag ON.
 		if (labels[0][0] === "[") {
 			actionChoice = true;
 		}
 		if (!actionChoice) {
+			//It is not action choices.
+			//Display the input filed to type in the choice selected
 			choiceInputDOM.style.display = "inline-block";	
 		}
 		
@@ -84,27 +95,35 @@ subscribe("choose", function(choices){
 			button.innerHTML = label;
 			button.onclick = (function(cb,message){
 				return function(){
-					console.log(message);
+
+					//Check if choice selection to be saved.
+					//If there is no need to save the selection, the addSelection flag should be set OFF, before calling choose function.
 					if(addSelection) {
+						//addSelection flag is on. Save the choice.
 						choicesMade.push(message);
 					}
 					else {
+						//addSelection flag was OFF. Make it ON (default).
 						addSelection = true;
 					}
+
+					//Check if the choice is an action or dialogue.
 					if (!actionChoice) {
-						jQuery("#choice_input").removeData("typed");
+						//Choice is a dialogue. Type it in the input field. Uses the typed.js lib.
+						jQuery("#choice_input").removeData("typed");//Required to avoid an issue with typed.js lib.
 						jQuery("#choice_input").typed({
 	        				strings: [message],
-	        				typeSpeed: 0,
+	        				typeSpeed: 100,
 	        				callback: function() {
-	        					choiceInputDOM.value = "";
-								choiceInputDOM.style.display = "none";
-								choicesDOM.innerHTML = "";
-								cb(message);
+	        					choiceInputDOM.value = ""; //Remove the typed choice from input field.
+								choiceInputDOM.style.display = "none"; //Hide the input field.
+								choicesDOM.innerHTML = ""; //Remove the choices.
+								cb(message); //Calls the action.
 	        				}
 	      				});
 	      			}
 	      			else {
+	      				//Choice is an action. No need to type it in the input field.
 						choicesDOM.innerHTML = "";
 						cb(message);
 	      			}

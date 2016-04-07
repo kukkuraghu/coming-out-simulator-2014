@@ -14,10 +14,9 @@
 			
 			<div id="background"></div>
 			<div id="dialogue"></div>
-			<div id="choices">
-				<!-- <span id="choice_input"  class="textbox" name=''></span> -->
-				<input type="text" id="choice_input" class="textbox" name="">
-				<div id="choices1"></div>
+			<div id="choices_selection">
+				<input type="text" id="choice_input" class="textbox">
+				<div id="choices"></div>
 			</div>
 
 			<div id="blank"></div>
@@ -110,6 +109,9 @@
 	</div>
 </body>
 <script>
+	//This app also uses $ as a global variable. 
+	//To avoid conflicts with jQuery variables, the following function is called.
+	//It is recommended by jQuery.
 	jQuery.noConflict();
 </script>
 <script src="js/core/q.js"></script>
